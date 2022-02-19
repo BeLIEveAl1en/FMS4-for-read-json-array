@@ -24,32 +24,43 @@ public class FMSTest {
     }
 
     @Test
-    public void shouldPassWithAlphabetic(){
-        shouldPass("[\"John\",\"Anna\",\"Peter\"]");
-    }
-
-    @Test
-    public void shouldPassWithAlphabeticAndWithDigit(){
-        shouldPass("[\"John\",50,\"Anna\",\"Peter\",60]");
-    }
-
-    @Test
     public void shouldPassWithAlphabeticAndWithWhitespace(){
         shouldPass("[\"John\", \"Anna\", \"Peter\"]" );
     }
 
     @Test
-    public void shouldPassWithAlphabeticAndWithDigitAndWithWhitespace(){
-        shouldPass("[\"John\", 50, \"Anna\", \"Peter\", 60]");
-    }
+    public void shouldPassWithAlphabeticAndWithDigitAndWithWhitespace(){shouldPass("[\"John\", 50, \"Anna\", \"Peter\", 60]");}
 
     @Test
-    public void shouldFailWithWhitespace(){
+    public void shouldPassWithAlphabeticAndWithDigitAndWithBooleanVariable(){shouldPass("[false, \"John\", 50, true, \"Anna\", null, \"Peter\", 60]");}
+
+    @Test
+    public void shouldPassWithWhitespace(){
         shouldFail("[\"Jo hn\",\"Anna\",\"Peter\"]");
     }
 
     @Test
     public void shouldFailWithThreeBrackets(){
         shouldFail("[\"John\",\"Anna\",\"Peter\"]]");
+    }
+
+    @Test
+    public void shouldFailWithWrongLetterInFalse(){
+        shouldFail("[ftlse, 50]");
+    }
+
+    @Test
+    public void shouldFailWithWrongLetterInTrue(){
+        shouldFail("[trug]");
+    }
+
+    @Test
+    public void shouldFailWithWrongLetterInNull(){
+        shouldFail("[nyll]");
+    }
+
+    @Test
+    public void shouldFailWithExtraComma(){
+        shouldFail("[\"John\", \"Anna\", \"Peter\", ]");
     }
 }

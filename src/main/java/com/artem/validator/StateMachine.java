@@ -7,8 +7,7 @@ public class StateMachine {
     private int counterOfQuotes = 0;
     private int counterOfBrackets = 0;
     private int buf = 0;
-
-    static State state = new State(0);
+    private final State state = new State(0);
 
     public ValidationResult validate(String inputStr){
         str = inputStr.toCharArray();
@@ -64,7 +63,7 @@ public class StateMachine {
                     counterOfQuotes--;
                     state.setState(6);
                 }
-                else {
+                else if (Character.isWhitespace(symbol)){
                     return false;
                 }
                 return true;
@@ -123,30 +122,34 @@ public class StateMachine {
             case 6 :
                 if (Character.isDigit(symbol)){
                     state.setState(1);
+                    state.setBufState();
                 }
                 else if (symbol == '"'){
                     counterOfQuotes++;
                     state.setState(2);
+                    state.setBufState();
                 }
                 else if(Character.isWhitespace(symbol)){
                     state.setState(6);
+                    state.setBufState();
                 }
                 else if (symbol == 't'){
-                    //buf++;
                     state.setState(3);
+                    state.setBufState();
                 }
                 else if (symbol == 'f'){
-                    //buf++;
                     state.setState(4);
+                    state.setBufState();
                 }
                 else if (symbol == 'n'){
-                    //buf++;
                     state.setState(5);
+                    state.setBufState();
                 }
                 else if (symbol == ','){
                     state.setState(6);
+                    state.setBufState();
                 }
-                else if (symbol == ']'){
+                else if (symbol == ']' && state.getBufState() != 6){
                     counterOfBrackets--;
                     return true;
                 }
