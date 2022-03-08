@@ -24,19 +24,19 @@ public class FMSTest {
     }
 
     @Test
-    public void shouldPassWithAlphabeticAndWithWhitespace(){
+    public void shouldPassWithStringsAndWithWhitespace(){
         shouldPass("[\"John\", \"Anna\", \"Peter\"]" );
     }
 
     @Test
-    public void shouldPassWithAlphabeticAndWithDigitAndWithWhitespace(){shouldPass("[\"John\", 50, \"Anna\", \"Peter\", 60]");}
+    public void shouldPassWithStringsAndWithDigitAndWithWhitespace(){shouldPass("[\"John\", 50, \"Anna\", \"Peter\", 60, null]");}
 
     @Test
-    public void shouldPassWithAlphabeticAndWithDigitAndWithBooleanVariable(){shouldPass("[false, \"John\", 50, true, \"Anna\", null, \"Peter\", 60]");}
+    public void shouldPassWithStringsAndWithDigitAndWithBooleanVariable(){shouldPass("[false, \"John\", 50, true, \"Anna\", null, \"Peter\", 60]");}
 
     @Test
     public void shouldPassWithWhitespace(){
-        shouldFail("[\"Jo hn\",\"Anna\",\"Peter\"]");
+        shouldPass("[\"Jo hn\",\"Anna\",\"Peter\"]");
     }
 
     @Test
@@ -61,6 +61,11 @@ public class FMSTest {
 
     @Test
     public void shouldFailWithExtraComma(){
-        shouldFail("[\"John\", \"Anna\", \"Peter\", ]");
+        shouldFail("[\"John\", \"Anna\", \"Peter\",]");
+    }
+
+    @Test
+    public void shouldFailWithoutComma(){
+        shouldFail("[\"\"\"\"\"\"]");
     }
 }

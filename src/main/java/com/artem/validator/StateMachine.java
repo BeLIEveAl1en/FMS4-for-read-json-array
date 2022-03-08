@@ -6,7 +6,8 @@ public class StateMachine {
     private int position = 0;
     private int counterOfQuotes = 0;
     private int counterOfBrackets = 0;
-    private int buf = 0;
+    private int counter = 0;
+    private int buf;
     private final State state = new State(0);
 
     public ValidationResult validate(String inputStr){
@@ -56,12 +57,12 @@ public class StateMachine {
                 return true;
 
             case 2 :
-                if (Character.isDigit(symbol) || Character.isAlphabetic(symbol)){
+                if (Character.isDigit(symbol) || Character.isAlphabetic(symbol) || Character.isWhitespace(symbol)){
                     state.setState(2);
                 }
                 else if (symbol == '"'){
                     counterOfQuotes--;
-                    state.setState(6);
+                    state.setState(7);
                 }
                 else if (Character.isWhitespace(symbol)){
                     return false;
@@ -69,15 +70,15 @@ public class StateMachine {
                 return true;
 
             case 3 :
-                if (symbol == 'r' && buf == 0){
-                    buf++;
+                if (symbol == 'r' && counter == 0){
+                    counter++;
                 }
-                else if (symbol == 'u'  && buf == 1){
-                    buf++;
+                else if (symbol == 'u'  && counter == 1){
+                    counter++;
                 }
-                else if (symbol == 'e'  && buf == 2){
-                    buf = 0;
-                    state.setState(6);
+                else if (symbol == 'e'  && counter == 2){
+                    counter = 0;
+                    state.setState(7);
                 }
                 else {
                     return false;
@@ -85,18 +86,18 @@ public class StateMachine {
                 return true;
 
             case 4 :
-                if (symbol == 'a'  && buf == 0){
-                    buf++;
+                if (symbol == 'a'  && counter == 0){
+                    counter++;
                 }
-                else if (symbol == 'l'  && buf == 1){
-                    buf++;
+                else if (symbol == 'l'  && counter == 1){
+                    counter++;
                 }
-                else if (symbol == 's'  && buf == 2){
-                    buf++;
+                else if (symbol == 's'  && counter == 2){
+                    counter++;
                 }
-                else if (symbol == 'e'  && buf == 3){
-                    buf = 0;
-                    state.setState(6);
+                else if (symbol == 'e'  && counter == 3){
+                    counter = 0;
+                    state.setState(7);
                 }
                 else {
                     return false;
@@ -104,15 +105,15 @@ public class StateMachine {
                 return true;
 
             case 5 :
-                if (symbol == 'u'  && buf == 0){
-                    buf++;
+                if (symbol == 'u'  && counter == 0){
+                    counter++;
                 }
-                else if (symbol == 'l'  && buf == 1){
-                    buf++;
+                else if (symbol == 'l'  && counter == 1){
+                    counter++;
                 }
-                else if (symbol == 'l'  && buf == 2){
-                    buf = 0;
-                    state.setState(6);
+                else if (symbol == 'l'  && counter == 2){
+                    counter = 0;
+                    state.setState(7);
                 }
                 else {
                     return false;
@@ -145,13 +146,23 @@ public class StateMachine {
                     state.setState(5);
                     state.setBufState();
                 }
-                else if (symbol == ','){
-                    state.setState(6);
-                    state.setBufState();
-                }
-                else if (symbol == ']' && state.getBufState() != 6){
+                else if (symbol == ']' && state.getBufState() != 6 && buf != ','){
                     counterOfBrackets--;
                     return true;
+                }
+                else {
+                    return false;
+                }
+                return true;
+
+            case 7:
+                if(symbol == ','){
+                    state.setState(6);
+                    buf = ',';
+                }
+                else if(symbol == ']'){
+                    state.setState(6);
+                    counterOfBrackets--;
                 }
                 else {
                     return false;
